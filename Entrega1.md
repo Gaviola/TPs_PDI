@@ -239,3 +239,169 @@ Al utilizar una imagen mas simple se puede observar como la ecualizacion mejora 
 ![alt text](/Images/image-23.png)  
 ![alt text](/Images/image-24.png)
 ![alt text](/Images/image-25.png)
+
+### Ejercicio 9
+**Implementar una umbralizacion manual eligiendo un valor de umbral. Usar el metodo de Otsu
+para calcular un umbral optimo automaticamente.**
+
+El código se encuentra en el siguiente [Notebook](./TP2/EJ1.ipynb). 
+```py
+# Implementacion con umbralizacion manual
+
+img = cv2.imread('bosque.jpg', cv2.IMREAD_GRAYSCALE)
+umbral = 180
+_, img_umbral = cv2.threshold(img, umbral, 255, cv2.THRESH_BINARY) # Devuelve el umbral y la imagen umbralizada. Devuelve -1 si no encuentra un umbral
+
+# Implementacion con umbralizacion de Otsu
+
+umra_otsu, img_otsu = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU) 
+
+show_image(img, 'Imagen Original')
+show_image(img_umbral, 'Imagen Umbralizada Manual')
+show_image(img_otsu, 'Imagen Umbralizada Otsu')
+
+```
+Para ambas umbralizaciones se utiliza la funcion `cv2.threshold()`pero para la umbralizacion con el metodo de otsu se 
+utilizo la funcion  con el flag `cv2.THRESH_OTSU`. El flag `cv2.THRESH_BINARY` indica que se va a realizar una 
+umbralizacion binaria.
+
+El metodo de Otsu busca encontrar un umbral en el que dado un fondo y un objeto en el frente estos esten lo mas separados 
+posibles lo que implica que tengan una varianza minima entre ambos y sus medias estan lo mas alejadas posibles (medido 
+en el valor de intensidad)
+
+En las siguientes imagenes se puede apreciar la diferencia entre aplicar un umbral manualmente (180) y el obtenido por 
+el metodo de Otsu (127).
+
+![alt text](/Images/image-26.png)
+![alt text](/Images/image-27.png)
+![alt text](/Images/image-28.png)
+
+### Ejercicio 11
+**Implementar la transformacion gamma I’=I
+y, permitiendo ajustar el valor de y dinamicamente.
+Aplicar diferentes valores de y en distintas regiones de la imagen (por ejemplo, usando una mascara 
+o adaptando y en funcion del brillo local). Visualizar el efecto de la correccion gamma en la imagen
+y en su histograma.**
+
+El codigo se puede ejecutar en el siguiente [Notebook](./TP2/EJ1.ipynb).
+
+La funcion transformacion gamma se implemento de la siguiente manera:
+```py
+def gamma_correction(img, gamma=2.8):
+    val_max = 256
+    intensidad_max = val_max - 1
+    tabla_trans = np.zeros((val_max,), dtype=np.uint8) 
+    
+    for intensidad in range(val_max):
+        val_escala = (intensidad / intensidad_max) # Escalamos al intervalo [0,1]
+        val_trans = np.power(val_escala, gamma) # Aplicamos la transformacion gamma
+        intensidad_salida = int(np.round(val_trans * intensidad_max)) # Escalamos al intervalo [0,255]
+        tabla_trans[intensidad] = np.clip(intensidad_salida, 0, 255) # Limitamos el valor a [0,255]
+    
+    img_trans = cv2.LUT(img,tabla_trans) # Aplicamos la tabla de transformacion a la imagen
+    return img_trans
+```
+
+En base a esta funcion de la de la transformacion gamma se procedieron a crear distintas regiones en la imagen en 
+funcion de mascaras (La imagen se dividio en 4 regiones) y se aplico un valor de gamma distinto para cada una de ellas.
+La funcion cv2.LUT() es una lookup table que mapea cada pixel de la imagen original a su transformacion coorespondiente.
+
+Los resultados obteinidos fueron los siguientes:
+![alt text](/Images/image-29.png)
+![alt text](/Images/image-30.png)
+![alt text](/Images/image-31.png)
+![alt text](/Images/image-32.png)
+![alt text](/Images/image-33.png)
+![alt text](/Images/image-34.png)
+![alt text](/Images/image-35.png)
+![alt text](/Images/image-36.png)
+
+En dichas imagenes podemos ver como dependiendo del valor de gamma se puede apreciar un aumento o disminucion en el 
+brillo (para gamma menor a 1 se oscurece mientra que con gamma mayor a 1 se aclara). Por el otro lado, a la hora de
+analizar el histograma, este sufre una traslacion de los valores hacia la izquierda o derecha dependiendo del valor de 
+gamma (para gamma menor a 1 se corre hacia la derecha y para gamma mayor a 1 a la izquierda).
+
+### 2 Combinacion de imagenes
+
+### Ejercicio 3
+**Multiplicacion y division de imagenes: Multiplicar y divide dos imagenes pıxel a pıxel utilizando
+cv2.multiply() y cv2.divide(), observando como afecta el brillo y contraste.**
+
+El código se encuentra en el siguiente [Notebook](./TP2/EJ2.ipynb).
+
+Se utilizaron las siguietes imagenes para realizar las operaciones:
+![alt text](/Images/image-37.png)
+![alt text](/Images/image-38.png)
+
+se realizaron img1 op img2 y img2 op img1. Los resultados obtenidos de las operaciones fueron los siguientes:
+
+![alt text](/Images/image-39.png)
+![alt text](/Images/image-40.png)
+![alt text](/Images/image-41.png)
+![alt text](/Images/image-42.png)
+
+Al realizar la multiplicacion se tiende a aumentar el brillo de los pixeles, mientras que al aplicar la division esta va
+a depender del valor de la imagen que se utilice como divisor. Si el divisor es mayor a el dividendo el resultado tiende
+osurecer el pixel, por el lado contrario, si el divisor es menor a el dividendo el resultado tiende a aclarar el pixel.
+
+### Ejercicio 5
+**Combinacion con operadores logicos: Usa operadores booleanos (cv2.bitwise and, cv2.bitwise or,
+cv2.bitwise xor) para fusionar imagenes basandose en una mascara binaria. Describir que sucede en
+cada caso**
+
+El código se encuentra en el siguiente [Notebook](./TP2/EJ2.ipynb).
+
+Para este ejercicio se utilizaron las siguientes imagenes:
+![alt text](/Images/image-43.png)
+![alt text](/Images/image-44.png)
+
+Y posteriormente se aplico una umbralizacion a la primera imagen com un valor de 60 resultando en lo siguiente:
+![alt text](/Images/image-45.png)
+
+Despues se procedio a realizar las operaciones logicas obteniendo las siguientes imagenes:
+![alt text](/Images/image-46.png)
+![alt text](/Images/image-47.png)
+![alt text](/Images/image-48.png)
+
+La mascara en cada una de las 3 operaciones delimita la zona en la cual se realizaran las comparaciones de bit a bit. Una vez delimitada la zona aplica la opracion correspondiente (and, or o xor) entre los bits que representan cada pixel.
+ 
+Ej: pixel1 = 150, pixel2 = 200 y su respectivo valor binario es 10010110 y 11001000. Si aplicamos las operaciones bit a bit el resultado seria el siguiente:
+##### and: 10010110 and 11001000 = 10000000 = 128 
+##### or: 10010110 or 11001000 = 11011110 = 222
+##### xor: 10010110 xor 11001000 = 01011110 = 94
+Desde el punto de vista de la imagen resultante, el resultado de cada operacion es el siguiente:
+##### and: Es una especie de fusion de ambas imagenes en donde se oscurece la imagen y utiliza de fondo la segunda imagen 
+##### or: Fusiona ambas imagenes pero en este caso se un incremento del color blanco en el resultado. En este caso la imagen 2 utilizada de fondo no es tan clara
+##### xor: En este caso se remarca mas el contraste entre ambas imagenes
+
+### Ejercicio 8
+**Uso de operadores logicos para reemplazar partes de una imagen: Reemplazar un area especıfica
+de una imagen con otra utilizando operadores logicos y relacionales para definir la region de interes
+(ROI).**
+
+El código se encuentra en el siguiente [Notebook](./TP2/EJ2.ipynb).
+
+Para este ejercicio se utilizaron las siguientes imagenes como fondo y objeto:
+![alt text](/Images/image-49.png)
+![alt text](/Images/image-50.png)
+
+Para realizar esta tarea se utilizara la formula: 
+##### R:= (B AND NOT C) OR (A AND C)
+Donde A es el fondo, B es el objeto, C es la mascara del objeto y NOT C su mascara invertida.
+
+De esta manera vamos a obtener las siguientes imagenes parciales durante el proceso:
+## C
+![alt text](/Images/image-51.png)
+## NOT C
+![alt text](/Images/image-52.png)
+## A AND C
+![alt text](/Images/image-53.png)
+## B AND NOT C
+![alt text](/Images/image-54.png)
+
+Para finalmente aplicar la formula y obtener la imagen final:
+## R:= (B AND NOT C) OR (A AND C)
+![alt text](/Images/image-55.png)
+
+
+
