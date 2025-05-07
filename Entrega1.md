@@ -1,7 +1,7 @@
 # Procesamiento de Imágenes
 Luciano Masuelli  
 Facundo Gaviola  
-## Trabajo Práctico N°1
+## Trabajo Práctico 1
 ### 1. Modos de color en imágenes
 ### Ejercicio 6  
 **La conversion de una imagen de color a escala de grises se puede hacer de varias formas. El ejercicio consiste en convertir la imagen de Lenna color a escala de grises utilizando diferentes metodos.** 
@@ -173,7 +173,7 @@ def RLE_decoded(img_rle, shape):
     
     return np.array(decoded_pxl, dtype=np.uint8).reshape(shape) # Convertimos a array y le damos la forma original
 ```
-Se puede ejecutar en el siguiente [Notebook](./TP1/ej1.ipynb#6)
+Se puede ejecutar en el siguiente [Notebook](./TP1/ej2.ipynb)
 
 A continucaicón se muestran los resultados obtenidos en dos imágenes distintas:  
 ![alt text](image-8.png)
@@ -188,3 +188,54 @@ A continucaicón se muestran los resultados obtenidos en dos imágenes distintas
 
 
 Como se puede ver en los resultados, dado que el algoritmo RLE es un algoritmo de compresion sin perdida, las metricas PSNR y SSIM nos dicen que ambas imagenes son iguales.  
+
+
+## Trabajo Práctico 2
+### 1 Histogramas 
+### Ejercicio 7
+**Transformar la distribucion de intensidades de una imagen para que se parezca a la de otra. Implementar el ajuste de histograma usando OpenCV o skimage.exposure.match histograms(). Comparar los histogramas antes y despues del ajuste.**  
+
+Para llevar a cabo este ejercicio se utilizó `skimage.exposure.match_histograms()` para cada canal (B,G,R).  
+A continuación se muestra el código:
+```py
+def match_hist_color(source, reference):
+    matched = source.copy()
+    for i in range(3):  # B, G, R
+        matched[:,:,i] = match_histograms(source[:,:,i], reference[:,:,i])
+    return matched
+```
+Se puede ejecutar en el siguiente [Notebook](./TP2/EJ1.ipynb)
+
+Las imágenes de entrada y la resultante son las siguientes:  
+![alt text](image-12.png)
+![alt text](image-13.png)
+![alt text](image-14.png)
+
+Para realizar la comparación, se graficaron los histogramas de cada imagen, donde se puede apreciar cómo el histograma de la imagen resultante se asemeja a el de la referencia, el canal azúl tiene una menor intensidad y frecuencia, mientras que el verde se amplía a frecuencias más altas. Se nota tambíen que al hacer esto hay una pérdida de información en algunas intensidades de color.
+![alt text](image-15.png) 
+![alt text](image-16.png)
+![alt text](image-17.png)
+
+
+### Ejercicio 8
+**Aplicar ecualizacion de histograma a una imagen en escala de grises. Comparar la imagen original
+con la ecualizada.**  
+
+Para este ejercicio se utilizó la función `cv2.equalizeHist()`.  
+El código se encuentra en el siguiente [Notebook](./TP2/EJ1.ipynb).  
+
+Los resultados fueron los siguientes:  
+
+En este caso la mariposa pierde calidad de imagen al aplicar la ecualizacion. Esto puede deberse a que la imagen de por si posee un buen balance en el histograma, sumado a que la el valor blanco en la imagen tiene una mayor representacion en el histograma, lo que tiende a dividir en 2 partes el histograma.
+![alt text](image-18.png)
+![alt text](image-19.png)
+![alt text](image-20.png)
+![alt text](image-21.png)
+
+
+
+Al utilizar una imagen mas simple se puede observar como la ecualizacion mejora el contraste y balancea el histograma de la imagen.  
+![alt text](image-22.png)
+![alt text](image-23.png)
+![alt text](image-24.png)
+![alt text](image-25.png)
