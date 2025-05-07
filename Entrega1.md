@@ -13,7 +13,7 @@ lenna_gris = cv2.cvtColor(lenna_color, cv2.COLOR_BGR2GRAY) # Solo queda una tupl
 show_image(lenna_gris, 'Imagen Lenna Gris')
 ```
 
-![alt text](image.png)
+![alt text](/Images/image.png)
 
 **(b) Usando la formula de luminancia**  
 
@@ -25,7 +25,7 @@ lenna_gris = lenna_gris.astype(np.uint8) # el resultado de la operacion anterior
 # trabajar con float sino valores en el rango 0-255.
 show_image( lenna_gris, 'Imagen Lenna Gris (Luminancia)')
 ```
-![alt text](image-1.png)
+![alt text](/Images/image-1.png)
 
 **(c) Usando scickit-image y el metodo `rgb2gray()`**  
 
@@ -35,7 +35,7 @@ lenna_gris = ski.color.rgb2gray(lenna_color_rgb)  # Convertimos a escala de gris
 lenna_gris = (lenna_gris * 255).astype(np.uint8)
 show_image(lenna_gris, 'Imagen Lenna Gris (skimage)')
 ```
-![alt text](image-2.png)
+![alt text](/Images/image-2.png)
 
 Se pueden ejecutar los ejercicios en el siguiente [Notebook](./TP1/ej1.ipynb#6). En la sección que corresponde al ejercicio 6 se encuentra la función `ej6()` que contiene el código anterior.  
 
@@ -63,9 +63,9 @@ Para los modos de color HSV y HSL se utilizó `cv2.cvtColor()` para realizar la 
 
 Los resultados fueron los siguientes:  
 
-![alt text](image-3.png)
-![alt text](image-4.png)
-![alt text](image-5.png)  
+![alt text](/Images/image-3.png)
+![alt text](/Images/image-4.png)
+![alt text](/Images/image-5.png)  
 
 
 
@@ -110,8 +110,8 @@ Se puede ejecutar en el siguiente [Notebook](./TP1/ej1.ipynb#6)
 
 La imagen se sigue viendo gris al transformarse a RGB. Lo que si cambia es el hecho de que en este caso volvemos a tener 3 canales, pero dentro de cada pixel tenemos el mismo valor en cada canal. Esto se debe a que al transformar la imagen de RGB a gris utilizamos la formula de luminancia, el cual nos da 1 solo valor por pixel. Esto provoca una perdida de informacion ya que no se puede recuperar la informacion original de los colores partiendo unicamente de la imagen en escala de grises.  
 
-![alt text](image-6.png)
-![alt text](image-7.png)
+![alt text](/Images/image-6.png)
+![alt text](/Images/image-7.png)
 
 El código se muestra a continuación:
 ```py
@@ -176,10 +176,10 @@ def RLE_decoded(img_rle, shape):
 Se puede ejecutar en el siguiente [Notebook](./TP1/ej2.ipynb)
 
 A continucaicón se muestran los resultados obtenidos en dos imágenes distintas:  
-![alt text](image-8.png)
-![alt text](image-9.png)
-![alt text](image-10.png)
-![alt text](image-11.png)
+![alt text](/Images/image-8.png)
+![alt text](/Images/image-9.png)
+![alt text](/Images/image-10.png)
+![alt text](/Images/image-11.png)
 
 | Imagen | PSNR (dB) | SSIM   |
 |--------|-----------|--------|
@@ -207,14 +207,14 @@ def match_hist_color(source, reference):
 Se puede ejecutar en el siguiente [Notebook](./TP2/EJ1.ipynb)
 
 Las imágenes de entrada y la resultante son las siguientes:  
-![alt text](image-12.png)
-![alt text](image-13.png)
-![alt text](image-14.png)
+![alt text](/Images/image-12.png)
+![alt text](/Images/image-13.png)
+![alt text](/Images/image-14.png)
 
 Para realizar la comparación, se graficaron los histogramas de cada imagen, donde se puede apreciar cómo el histograma de la imagen resultante se asemeja a el de la referencia, el canal azúl tiene una menor intensidad y frecuencia, mientras que el verde se amplía a frecuencias más altas. Se nota tambíen que al hacer esto hay una pérdida de información en algunas intensidades de color.
-![alt text](image-15.png) 
-![alt text](image-16.png)
-![alt text](image-17.png)
+![alt text](/Images/image-15.png) 
+![alt text](/Images/image-16.png)
+![alt text](/Images/image-17.png)
 
 
 ### Ejercicio 8
@@ -227,15 +227,15 @@ El código se encuentra en el siguiente [Notebook](./TP2/EJ1.ipynb).
 Los resultados fueron los siguientes:  
 
 En este caso la mariposa pierde calidad de imagen al aplicar la ecualizacion. Esto puede deberse a que la imagen de por si posee un buen balance en el histograma, sumado a que la el valor blanco en la imagen tiene una mayor representacion en el histograma, lo que tiende a dividir en 2 partes el histograma.
-![alt text](image-18.png)
-![alt text](image-19.png)
-![alt text](image-20.png)
-![alt text](image-21.png)
+![alt text](/Images/image-18.png)  
+![alt text](/Images/image-19.png)  
+![alt text](/Images/image-20.png)  
+![alt text](/Images/image-21.png)  
 
 
 
 Al utilizar una imagen mas simple se puede observar como la ecualizacion mejora el contraste y balancea el histograma de la imagen.  
-![alt text](image-22.png)
-![alt text](image-23.png)
-![alt text](image-24.png)
-![alt text](image-25.png)
+![alt text](/Images/image-22.png)
+![alt text](/Images/image-23.png)  
+![alt text](/Images/image-24.png)
+![alt text](/Images/image-25.png)
