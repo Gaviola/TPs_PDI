@@ -103,7 +103,7 @@ def ej7():
     lenna_HSV = cv2.cvtColor(lenna_BGR, cv2.COLOR_BGR2HSV)
     lenna_HSL = cv2.cvtColor(lenna_BGR, cv2.COLOR_BGR2HLS)
 ```
-[Notebook](./TP1/ej1.ipynb#6)
+Se puede ejecutar en el siguiente [Notebook](./TP1/ej1.ipynb#6)
 
 ### Ejercicio 8
 **Tomar la imagen convertida en escala de grises y volver a convertir al en modo RGB. ¿Que ha sucedido?**  
@@ -123,4 +123,68 @@ def ej8():
     show_image(lenna_gris, 'Imagen Lenna Gris (Original)')
     show_image(lenna_rgb, 'Imagen Lenna Gris (Convertida a RGB)')
 ```
-[Notebook](./TP1/ej1.ipynb#6)
+Se puede ejecutar en el siguiente [Notebook](./TP1/ej1.ipynb#6)
+
+
+### 2. Compresión de Imágenes
+### Ejercicio 2
+**Dar detalles de las siguientes métricas de calidad de compresión (PSNR, SSIM)**   
+
+**PSNR**: La relación señal-ruido máxima (PSNR) es una métrica de referencia completa no lineal que compara los valores de los píxeles de la imagen de referencia original con los de la imagen degradada. Para calcular la PSNR, primero se debe calcular el error cuadrático medio (MSE). Cuanto menor sea el MSE, menor será el error y mayores serán los resultados de la PSNR. La idea principal es que cuanto mayor sea la puntuación de la PSNR, mejor se habrá reconstruido la imagen degradada en comparación con la imagen de referencia, lo que a su vez significa que el algoritmo utilizado para la reconstrucción también es mejor. 
+Sin embargo, la mayor desventaja que presenta PSNR es que sus puntuaciones no siempre se correlacionan con la calidad percibida. Un área común donde se aprecia esto es en la borrosidad, donde por ejemplo si se tienen dos imágenes identicas salvando que una es mas borrosa generalmente presentan un puntaje similar.  
+
+**SSIM**: El índice de similitud estructural (SSIM) es una métrica de referencia completa no lineal que compara la luminancia, el contraste y la estructura de la imagen original y la degradada. En otras palabras, SSIM mide las diferencias entre las propiedades (luminancia, contraste y estructura) de los píxeles  
+El SSIM se mide en una escala de 0 a 1, donde cuanto más cercana sea la puntuación a 1, más similar será la imagen degradada a la imagen de referencia. Como se mencionó anteriormente, el SSIM es una métrica no lineal: los resultados de 0,97 a 1 indican una degradación mínima, los de 0,95 a 0,97 representan una degradación baja y los resultados por debajo de estos rangos indican una degradación media o alta.  
+SSIM es muy sensible a cualquier tipo de cambio estructural, como el estiramiento de una imagen, rotaciones o distorsiones similares. También se ve muy afectado por los bloques y el desenfoque.  
+Como desventaja, SSIM no es bueno para evaluar cambios en el tono de la imagen y factores similares.
+
+### Ejercicio 6
+**Implementar un modelo de compresion basado en codificacion Run-Length Encoding (RLE). El
+algoritmo Run-Length Encoding (RLE) reduce el tamaño de una imagen representando secuencias consecutivas de pıxeles identicos como una sola entrada. Para ello convertir una imagen en escala de grises. luego, implementar el algoritmo RLE para comprimir la imagen. Posteriormente implementar una funcion para descomprimir la imagen. Al finalizar, mostrar la imagen original y la imagen reconstruida. Probar con dos o tres imagenes que tengan diferentes caracterısticas, modos de color. utilizar alguna de las metricas nombradas anteriormente e evaluar el resultado de la misma.**  
+
+Para la implementación de este ejericicio se desarrolló la función `RLE()` que se encarga de generar la codificación RLE, mediante un bucle que va almacenando en una lista la codificación, una tupla de la forma (pixel, cantidad), de pixeles contínuos iguales.  
+La función `RLE_decoded()` es la encargada de decodificar la imagen antes codificada con RLE. Para esto, recorre la lista y mediante la función `extend()` se extiende la cantidad de pixeles repetidos. Finalmente retorna un array con la forma original de la imagen.  
+
+El siguiente es el código desarrollado:  
+
+```py
+def RLE(img):
+    img_flat = img.flatten()
+    img_rle = [] # Imagen codificada con RLE
+    
+    # Guardamos el primer pixel encontrado
+    last_pxl = img_flat[0]
+    count = 1
+    
+    for pxl in img_flat[1:]:  
+        if np.array_equal(pxl, last_pxl): # Si es igual al anterior sumamos 1 a la longitud
+            count += 1
+        else:
+            img_rle.append((last_pxl, count)) # Si no es igual guardamos la cadena contigua
+            last_pxl = pxl
+            count = 1
+    img_rle.append((last_pxl, count)) # Guardamos la ultima cadena
+    return img_rle
+
+def RLE_decoded(img_rle, shape):
+    decoded_pxl = []
+    for pxl, count in img_rle:
+        decoded_pxl.extend([pxl] * count) # Repetimos el pixel la cantidad de veces que indica la cadena
+    
+    return np.array(decoded_pxl, dtype=np.uint8).reshape(shape) # Convertimos a array y le damos la forma original
+```
+Se puede ejecutar en el siguiente [Notebook](./TP1/ej1.ipynb#6)
+
+A continucaicón se muestran los resultados obtenidos en dos imágenes distintas:  
+![alt text](image-8.png)
+![alt text](image-9.png)
+![alt text](image-10.png)
+![alt text](image-11.png)
+
+| Imagen | PSNR (dB) | SSIM   |
+|--------|-----------|--------|
+| 1      | inf       | 1.0000 |
+| 2      | inf       | 1.0000 |
+
+
+Como se puede ver en los resultados, dado que el algoritmo RLE es un algoritmo de compresion sin perdida, las metricas PSNR y SSIM nos dicen que ambas imagenes son iguales.  
