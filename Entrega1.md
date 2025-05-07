@@ -307,6 +307,7 @@ funcion de mascaras (La imagen se dividio en 4 regiones) y se aplico un valor de
 La funcion cv2.LUT() es una lookup table que mapea cada pixel de la imagen original a su transformacion coorespondiente.
 
 Los resultados obteinidos fueron los siguientes:
+
 ![alt text](/Images/image-29.png)
 ![alt text](/Images/image-30.png)
 ![alt text](/Images/image-31.png)
@@ -330,6 +331,7 @@ cv2.multiply() y cv2.divide(), observando como afecta el brillo y contraste.**
 El código se encuentra en el siguiente [Notebook](./TP2/EJ2.ipynb).
 
 Se utilizaron las siguietes imagenes para realizar las operaciones:
+
 ![alt text](/Images/image-37.png)
 ![alt text](/Images/image-38.png)
 
@@ -352,6 +354,7 @@ cada caso**
 El código se encuentra en el siguiente [Notebook](./TP2/EJ2.ipynb).
 
 Para este ejercicio se utilizaron las siguientes imagenes:
+
 ![alt text](/Images/image-43.png)
 ![alt text](/Images/image-44.png)
 
@@ -359,6 +362,7 @@ Y posteriormente se aplico una umbralizacion a la primera imagen com un valor de
 ![alt text](/Images/image-45.png)
 
 Despues se procedio a realizar las operaciones logicas obteniendo las siguientes imagenes:
+
 ![alt text](/Images/image-46.png)
 ![alt text](/Images/image-47.png)
 ![alt text](/Images/image-48.png)
@@ -382,6 +386,7 @@ de una imagen con otra utilizando operadores logicos y relacionales para definir
 El código se encuentra en el siguiente [Notebook](./TP2/EJ2.ipynb).
 
 Para este ejercicio se utilizaron las siguientes imagenes como fondo y objeto:
+
 ![alt text](/Images/image-49.png)
 ![alt text](/Images/image-50.png)
 
