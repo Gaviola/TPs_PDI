@@ -45,10 +45,37 @@ Al transformar la imagen a una escala de grises, perdemos los distintos canales 
 **(e) ¿Que profundidad de bits tiene la imagen?**  
 La profundidad de bits se ve alterada ya que cuando teniamos la imagen a color poseiamos 3 canales con 256 valores para cada uno, dando como resultado una profundidad de 24 bits (256 x 256 x 256 = 2^8 x 2^8 x 2^8). Al reducir la imagen a un solo canal al transformarla a una escala de grises la imagen va a poseer 8 bits de profundiad (256 = 2^8).
 
-**(f) Evaluar con otra imagen de mayor profundidad** 
+**(f) Evaluar con otra imagen de mayor profundidad**   
+Para evaluar esto se generó una imagen con profundidad de 16 bits por canal.
+El siguiente es el código y los resultados:  
+```py
+# Crear una imagen RGB de 100x100 píxeles con valores de 16 bits (0 a 65535)
+altura, ancho = 100, 100
+# Cada canal (R, G, B) puede tener valores entre 0 y 65535
+imagen_rgb_16bit = np.zeros((altura, ancho, 3), dtype=np.uint16)
+
+# Asignar valores a los canales (ejemplo: gradiente por canal)
+for y in range(altura):
+    for x in range(ancho):
+        imagen_rgb_16bit[y, x, 0] = x * 65535 // ancho   # Azul
+        imagen_rgb_16bit[y, x, 1] = y * 65535 // altura  # Verde
+        imagen_rgb_16bit[y, x, 2] = 32768                # Rojo constante
+
+# Guardar como PNG de 16 bits por canal
+cv2.imwrite('imagen_rgb_16bit.png', imagen_rgb_16bit)
+
+show_image(imagen_rgb_16bit, 'Imagen RGB 16 bits')
+ej6(imagen_rgb_16bit, 'a') 
+ej6(imagen_rgb_16bit, 'b')
+ej6(imagen_rgb_16bit, 'c')
+```
+![alt text](/Images/image-16-0.png)
+![alt text](/Images/image-16-1.png)
+![alt text](/Images/image-16-2.png)
+![alt text](/Images/image-16-3.png)
 
 **(g) ¿Que sucede con la imagen? ¿Ha cambiado algo?**  
-De manera similar a como ocurre con una imagen de profundidad de 24 bits a color, si transformamos una imagen cuya profundidad es mayor, como por ejemplo 36 (4096 x 4096 x 4096 = 2^12 x 2^12 x 2^12), a una escala de grises quedaria una imagen de una profundidad de 12 (4096 = 2^12).  
+ Se observó que los resultados en algunos casos no son visibles o hay una pérdida de información debido a que estos algoritmos parecen no estar preparados para procesar imágenes de tal profundidad.  
 
 ### Ejercicio 7
 **Convertir la imagen de Lenna a otros modos de color, como CMYK, HSV, HSL. Mostrar el resultado.**  
