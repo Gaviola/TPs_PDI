@@ -408,5 +408,230 @@ Para finalmente aplicar la formula y obtener la imagen final:
 ## R:= (B AND NOT C) OR (A AND C)
 ![alt text](/Images/image-55.png)
 
+### 3 Dominio Espacial
+### Ejercicio 8
+**Suavizado y Sobel: Aplicar un filtro gaussiano antes del operador de Sobel y analizar las diferencias
+en la deteccion de bordes.** 
+
+El codigo se encuentra en el siguiente [Notebook](./TP2/EJ3.ipynb).
+
+Para este ejercicio se implementaron las funciones de filtro gaussiano y de sobel. 
+
+```py
+def kernel_gaussiano(size, sigma):
+    k = size // 2
+    x, y = np.meshgrid(np.arange(-k, k+1), np.arange(-k, k+1))
+    kernel = (1 / (2 * np.pi * sigma**2)) * np.exp(-(x**2 + y**2) / (2 * sigma**2))
+    kernel /= np.sum(kernel)  # Normalizamos para que sume 1
+    return kernel
+
+def filtro_gaussiano(img, size=3, sigma=1):
+    h1, w1 = img.shape
+    h2 = size
+    w2 = size
+    mask = kernel_gaussiano(size, sigma)
+    if h2 % 2 == 0 or w2 % 2 == 0:
+        raise ValueError("El tamaño del filtro debe ser impar.")
+    
+    if h2 > h1 or w2 > w1:
+        raise ValueError("El tamaño del filtro no puede ser mayor que la imagen.")
+    
+    g = np.zeros_like(img, dtype=np.float32)
+    for y in range(w1):
+        for x in range(h1):
+            valor = 0
+            s = -h2 // 2
+            for j in range(w2):
+                t = -w2 // 2
+                for i in range(h2):
+                    if 0 <= y+t < w1 and 0 <= x+s < h1:
+                        valor += mask[i,j] * img[x+s, y+t]
+                    t += 1
+                s += 1
+            g[x, y] = valor
+    return np.clip(g, 0, 255).astype(np.uint8)
+
+def sobel_filter(img):
+    sobel_x = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]], dtype=np.float32)
+    sobel_y = np.array([[-1, -2, -1], [0, 0, 0], [1, 2, 1]], dtype=np.float32)
+    filtered_x = filtro_gris(img, sobel_x, uint8=False)
+    filtered_y = filtro_gris(img, sobel_y, uint8=False)
+    filtered = np.sqrt(filtered_x**2 + filtered_y**2)
+    filtered = np.clip(filtered, 0, 255).astype(np.uint8)
+    return filtered
+
+```
+
+Al aplicar estos filtros obtenemos los siguientes resultados:
+![alt text](/Images/image-56.png)
+![alt text](/Images/image-57.png)
+
+### Ejercicio 12
+**Comparación de Métodos de Detección de Bordes : Comparar Sobel, Prewitt, Laplace y Canny trabajando diversas 
+imágenes con características diferentes.**  
+
+El código se encuentra en el siguiente [Notebook](./TP2/EJ3.ipynb).
+
+Para el ejercicio se implemento el filtro de prewitt, laplace, se utilizo el filtro de sobel previamente creado y se 
+utilizo la funcion `cv2.Canny()` para aplicar el filtro de canny con distintos valores de threshold.
+
+La implementacion de los filtros de prewitt y laplace son las siguiente:
+```py
+def prewitt_filter(img):
+    kernel_x = np.array([[-1, 0, 1],
+                        [-1, 0, 1],
+                        [-1, 0, 1]], dtype=np.float32)
+    
+
+    kernel_y = np.array([[ 1,  1,  1],
+                        [ 0,  0,  0],
+                        [-1, -1, -1]], dtype=np.float32)
+
+    filtered_x = filtro_gris(img, kernel_x, uint8=False)
+    filtered_y = filtro_gris(img, kernel_y, uint8=False)
+    filtered = np.sqrt(filtered_x**2 + filtered_y**2)
+    return np.clip(filtered, 0, 255).astype(np.uint8)
+
+def laplace_filter(img):
+    mask = np.array([[0, 1, 0],[1, -4, 1],[0, 1, 0]], dtype=np.float32)
+    return filtro_gris(img, mask)
+```
+
+A la hora de aplicar los distintos filtros obtenemos algunos de estos resultados (En el notebook hay mas ejemplos):
+
+![alt text](/Images/image-58.png)
+![alt text](/Images/image-59.png)
+![alt text](/Images/image-60.png)
+![alt text](/Images/image-61.png)
+![alt text](/Images/image-62.png)
+
+En base a estas imagenes Se observa que los filtros Sobel y Prewitt son bastante similares, aunque se nota cómo Sobel 
+enfatiza los bordes izquierdos de las figuras en las imágenes y Prewitt hace algo similar con los bordes derechos. En 
+imágenes con muchos detalles como la del bosque, Sobel y Prewitt devuelven un resultado difícil de visualizar, al igual 
+que el resto de los filtros. Laplace y Canny en imágenes más simples detallan con claridad los bordes, distinguiendose 
+en que Laplace muestra detalles mas finos o delicados de la imagen y Canny resalta con un trazo grueso los detalles. 
+Para la imagen del elefante Canny muestra satisfactoriamente el detalle de la figura, mientras que Laplace devuelve una 
+imagen oscura con pocos detalles, suponemos que puede tener que ver con el poco contraste entre colores de la imagen; en
+la imagen del bosque Laplace resulta devolver la imagen más distinguible, mientras que Canny pierde detalles más finos y
+no permite comprenderla.
+
+### Ejercicio 13
+**Realce de Detalles: Aplicar un filtro de paso alto y sumarlo a la imagen original para mejorar los
+detalles.**
+
+El código se encuentra en el siguiente [Notebook](./TP2/EJ3.ipynb).
+
+En este ejercicio se implemento la funcion de filtro gris la cual se le pasa como parametro un kernel de paso alto.
+El codigo es el sguiente:
+```py
+kernel_paso_alto = np.array([
+    [-1, -1, -1],
+    [-1,  8, -1],
+    [-1, -1, -1]
+], dtype=np.float32)
+
+def filtro_gris(img, mask, uint8=True):
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    h1, w1 = img.shape
+    h2, w2 = mask.shape
+    
+    g = np.zeros_like(img, dtype=np.float32)
+    for y in range(w1):
+        for x in range(h1):
+            valor = 0
+            s = -h2 // 2
+            for j in range(w2):
+                t = -w2 // 2
+                for i in range(h2):
+                    if 0 <= y+t < w1 and 0 <= x+s < h1:
+                        valor += mask[i, j] * img[x+s, y+t]
+                    t += 1
+                s += 1
+            g[x, y] = valor
+    if uint8:
+        return np.clip(g, 0, 255).astype(np.uint8)
+    else:
+        return np.clip(g, 0, 255)
+```
+
+Una vez se filtra la imagen y se le suma a la imagen original obteniendo las siguientes imagenes:
+
+![alt text](/Images/image-63.png)
+![alt text](/Images/image-64.png)
+![alt text](/Images/image-65.png)
+
+### Ejercicio 15
+**Filtro de Diferencia Gaussiana (DoG): Aplicar la t´ecnica de Diferencia de Gaussiana para resaltar
+bordes.**
+
+El código se encuentra en el siguiente [Notebook](./TP2/EJ3.ipynb).
+
+Para este ejercicio se hizo uso de la funcion `cv2.GaussianBlur()` para aplicar el filtro gaussiano con 2 sigma distintos
+y posteriormente aplicarle la diferentecia entre ellos.
+
+La imagen resultante es la siguiente:
+
+![alt text](/Images/image-66.png)
+![alt text](/Images/image-67.png)
+
+## Trabajo Práctico 3
+### 1 Operadores morfologicos
+### Ejercicio 4
+**Apertura y clausura morfologica: Aplicar apertura y clausura para eliminar ruido o cerrar huecos.
+Comparar la imagen original y la resultante de aplicar el operador. Comentar los efectos visuales.
+Comparar con los resultados anteriores. Mostrar 4 subplots: original, apertura, cierre, diferencia
+entre ambos.**
+
+El código se encuentra en el siguiente [Notebook](./TP3/EJ1.ipynb).
+
+Para el ejercicio se utilizo la funcion `cv2.morphologyEx()` para aplicar la apertura y clausura morfologica y 
+`cv2.absdiff()` para calcular la diferencia entre las imagenes.
+
+La imagen original fue umbralizada con un valor de 127 y posteriormente dicha imagen umbralizada se utilizaria para
+aplicar las distintas operaciones:
+
+![alt text](/Images/image-68.png)
+![alt text](/Images/image-69.png)
+
+De esta manera podemos concluir lo siguiente:
+##### Apertura: Elimina el ruido y suviza los bordes
+##### Clausura: Cierra los huecos y une los objetos separados
+
+La diferencia entre aplicar operaciones como dilatacion o erosion es que la apertura y clausura permite tener 
+terminaciones mas finas. Dicho de otra manera, si solo aplicaramos una erosion o dilatacion, ademas de eliminar cosas 
+como el ruido o agrandar detalles, tambien se crea una pequeña deformacion de los objetos mas grandes. Si aplicamos una 
+apertura o clausura podemos conseguir eliminar ruido, suavizar bordes o cerrar huecos (dependiendo que es lo que 
+necesitemos hacer) sin perder tanto la forma de los objetos grandes.
+
+### Ejercicio 5
+**Operacion de gradiente morfologico: Aplicar el gradiente morfologico (dilatacion - erosion). Visualizar los bordes 
+obtenidos mediante esta operacion.**
+
+El código se encuentra en el siguiente [Notebook](./TP3/EJ1.ipynb).
+
+En este ejercicio se utilizo la funcion `cv2.dilate()` y `cv2.erode()` para aplicar la dilatacion y erosion 
+respectivamente, tambien se utilizo la funcion `cv2.getStructuringElement()` para crear un kernel cuadrado de 
+3x3 y fianlmente se utilizo la funcion `cv2.subtract()` para calcular la diferencia entre las imagenes.
+
+La imagen utilizada primero fue umbralizada con un valor de 127 y posteriormente se aplicaron las operaciones
+de dilatacion y erosion.
+
+![alt text](/Images/image-70.png)
+![alt text](/Images/image-71.png)
+![alt text](/Images/image-72.png)
+
+### Ejercicio 7
+**Segmentacion basica con umbral + morfologıa: Aplicar umbral, luego apertura y cierre para
+mejorar el resultado. Ideal como paso previo a una segmentacion mas elaborada.**
+
+El código se encuentra en el siguiente [Notebook](./TP3/EJ1.ipynb).
+
+En este ejercicio se volvio a utilizar la funcion `cv2.morphologyEx()` para aplicar la apertura y clausura. El resultado
+obtenido es el siguiente:
+
+![alt text](/Images/image-73.png)
+![alt text](/Images/image-74.png)
+
+
 
 
