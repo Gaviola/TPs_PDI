@@ -19,8 +19,8 @@ bottom_right = (top_left[0] + w, top_left[1] + h)
 cv2.rectangle(image_color, top_left, bottom_right, (0, 0, 255), 2)
 ```
 Se probó con dos plantillas distintas sobre la misma imagen, mostrando los resultados visualmente.
-![alt text](/TP6/imgsEj2/image.png)
-![alt text](/TP6/imgsEj2/image-1.png)
+![alt text](/Entrega%202/Images/imgsEj2/image.png)
+![alt text](/Entrega%202/Images/imgsEj2/image-1.png)
 
 ---
 
@@ -87,7 +87,7 @@ El clasificador logró distinguir correctamente las figuras según sus caracter�
    macro avg       1.00      1.00      1.00        11
 weighted avg       1.00      1.00      1.00        11
 
-![alt text](/TP6/imgsEj2/image-2.png)
+![alt text](/Entrega%202/Images/imgsEj2/image-2.png)
 
 
 ---
@@ -138,9 +138,9 @@ Los resultados devuelven un bajo accuracy, probablemente debido a la limitada ca
 weighted avg       0.22      0.33      0.27         6
 
 **Imágenes del dataset**  
-![alt text](/TP6/dataset-letters/a1.jpeg)  
-![alt text](/TP6/dataset-letters/b3.jpeg)  
-![alt text](/TP6/dataset-letters/c1.png)  
+![alt text](/Entrega%202/Images/imgsEj2/a1.jpeg)  
+![alt text](/Entrega%202/Images/imgsEj2/b3.jpeg)  
+![alt text](/Entrega%202/Images/imgsEj2/c1.png)  
 ---
 
 ### 4. Clasificación de dígitos con CNN (MNIST)
@@ -165,7 +165,7 @@ history = model.fit(x_train, y_train_cat, epochs=5, batch_size=64, validation_sp
 ```
 Se obtuvo una precisión superior al 98% en el conjunto de test, mostrando la efectividad de las CNN para reconocimiento de patrones complejos.
 
-![alt text](image.png)
+![alt text](/Entrega%202/Images/imgsEj2/model.png)
 
 ---
 
