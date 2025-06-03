@@ -13,8 +13,8 @@ def ej_3(img,kernel_size=3):
     return img_otsu, cierre, apertura
 ```
 A continucación se muestran los resultados en dos ejemplos diferentes 
-![alt text](image.png)
-![alt text](image-1.png)
+![alt text](/Entrega%202/Images/imgsTP5/image.png)
+![alt text](/Entrega%202/Images/imgsTP5/image-1.png)
 
 Se observa cómo luego de aplicar Otsu para la binarización de la imagen del paisaje, si se quisiera segmentar para diferenciar el lago, aplicando apertura se unen los huecos permitiendo distinguir el agua de las demás.  
 Para el ejemplo del círculo, si consideramos los circulos interiores como ruido, observamos que con una clausura se une casi toda la región.  
@@ -42,7 +42,7 @@ def ej_4(img,kernel_size=5):
     return bordes,img_otsu, cierre
 ```
 
-![alt text](image-2.png)
+![alt text](/Entrega%202/Images/imgsTP5/image-2.png)
 
 ### Ejercicio 8
 >**Segmentación basada en regiones (crecimiento o split-merge). ¿Cómo se puede segmentar una
@@ -58,8 +58,8 @@ def ej8(img):
     h, w = img.shape[:2]
     return flood(img, (round(50),round(50)), tolerance=0.05)
 ```
-![alt text](image-3.png)
-![alt text](image-4.png)
+![alt text](/Entrega%202/Images/imgsTP5/image-3.png)
+![alt text](/Entrega%202/Images/imgsTP5/image-4.png)
 
 
 ### Ejercicio 10
@@ -130,7 +130,7 @@ def ej10(img):
                 titles=['Original Image', 'Canny Edges', 'Mask', 'Segmented Image'])
 ```
 
-![alt text](image-5.png)
+![alt text](/Entrega%202/Images/imgsTP5/image-5.png)
 
 ### Ejercicio 11
 >**Elegir y describir alguna de las siguientes tecnicas de segmentación:  
@@ -145,4 +145,4 @@ En este contexto, el algoritmo más conocido es el de Felzenszwalb y Huttenloche
 
 Este enfoque tiene ventajas como su velocidad y su capacidad de manejar bien imágenes con ruido o estructuras complejas. Además, al trabajar con superpíxeles o regiones en lugar de píxeles individuales, puede mantener bordes nítidos y producir segmentaciones con significado semántico más alto.
 
-![image.png](graph.png)
+![image.png](/Entrega%202/Images/imgsTP5/graph.png)
