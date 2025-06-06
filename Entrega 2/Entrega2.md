@@ -118,7 +118,7 @@ Se puede ejecutar en el siguiente [Notebook](./TP4/TP4.ipynb#11).
 
 Al realizar la transformada inversa se obtiene la imagen original con la cual se generaron las magnitudes de las 
 frecuencias. Esto deberia ser siempre asi siempre y cuando no se hayan realizado alteraciones a las frecuencias.
-Las imagenes onvolucradas son las siguientes:
+Las imagenes involucradas son las siguientes:
 
 ![Imagen](/Entrega%202/Images/img1.png)
 ![Imagen](/Entrega%202/Images/img2.png)
