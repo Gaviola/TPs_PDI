@@ -8,7 +8,32 @@ En este informe se presenta una metodología de procesamiento de imágenes para 
 
 ## 2. Metodologia
 
-El presente trabajo implementa un pipeline de procesamiento de imagen con el objetivo de detectar daños superficiales, como fisuras o áreas deterioradas, a partir de fotografías en formato BGR. El método propuesto se basa en el análisis de luminancia, intensidad y color, complementado con técnicas de mejora de contraste y operaciones morfológicas. A continuación se detallan las etapas del procedimiento.
+### 2.1 Exploracion del dataset
+
+Como primer paso, se realizo una inspeccion de las distintas imagenes contenidas dentro del dataset para poder determinar que estrategias podrian ser efectivas para poder detectar aquellas zonas deterioradas o dañadas. Dentro del mismo nos encontramos con un total de **1000** imagenes de distintas partes del mural las cuales tenian una amplia variedad de formas, colores, figuras y deterioros.
+
+***Imagenes de Ejemplo***
+
+Imagen con fisuras:
+
+![Imagen con fisuras](dataset_con_filtro\img\000000.png)
+
+Imagen con huecos despintados:
+
+![Imagen con huecos](dataset_con_filtro\img\000048.png)
+
+Imagenes con huecos y fisuras
+
+![Imagen con huecos](dataset_con_filtro\img\000056.png)
+
+Toda esta amplia variedad dentro de las imagenes dificulta la correcta deteccion de aquellas zonas afectadas por algun tipo de daño ya que dificulta la obtencion de un patron consistente con el que indentificarlo.
+
+### 2.2 Pipelines
+
+Para este trabajo de identificacion de la zonas dañadas se implementaron 2 pipelines de procesamiento de imagenes con el objetivo de detectar daños superficiales, fisuras, y áreas deterioradas. Se hace uso 2 pipelines debido a la complejidad de los patrones dentro de las imagenes, imposibilitando una correcta deteccion utilizando un unico pipeline.
+
+#### 2.2.1 Pipeline General
+El primer pipeline propuesto es mas eficaz para localizar aquellas regiones despintadas o con huecos aunque tiene la capacidad de detectar algunas grietas. Esta se basa en la intensidad del color (se busca un color terroso o arcilloso para los huecos y gruetas), técnicas de mejora de contraste y operaciones morfológicas. A continuaciónse detallan las etapas del procedimiento.
 
 ### 1. Preprocesamiento y Mejora de Contraste
 
